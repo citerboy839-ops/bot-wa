@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Bot WhatsApp Controller</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background: #0d1117;
+            color: #e6edf3;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #21262d;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            background: linear-gradient(135deg, #58a6ff, #3fb950);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #161b22;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .status-dot.online { background: #3fb950; }
+        .status-dot.offline { background: #f85149; }
+        .status-dot.loading { background: #d29922; }
+
+        /* ===== GRID 2 KOLOM ===== */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 12px;
+            padding: 20px;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: #30363d;
+        }
+
+        .card h3 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8b949e;
+            margin-bottom: 12px;
+        }
+
+        .card .value {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .card .sub {
+            font-size: 14px;
+            color: #8b949e;
+            margin-top: 4px;
+        }
+
+        /* ===== BOTTOM MENU ===== */
+        .menu-section {
+            background: #161b22;
+            border: 1px solid #21262d;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .menu-section h2 {
+            font-size: 18px;
+            margin-bottom: 16px;
+            color: #f0f6fc;
+        }
+
+        .menu-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .menu-btn {
+            background: #21262d;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .menu-btn:hover {
+            background: #30363d;
+            border-color: #58a6ff;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
+        .menu-btn.danger:hover {
+            border-color: #f85149;
+        }
+
+        .menu-btn.primary {
+            background: #238636;
+            border-color: #2ea043;
+            color: #fff;
+        }
+
+        .menu-btn.primary:hover {
+            background: #2ea043;
+        }
+
+        /* ===== BOT LIST ===== */
+        .bot-list {
+            margin-top: 20px;
+        }
+
+        .bot-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: #0d1117;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border-left: 3px solid #30363d;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .bot-item.online {
+            border-left-color: #3fb950;
+        }
+
+        .bot-item.offline {
+            border-left-color: #f85149;
+        }
+
+        .bot-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .bot-number {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .bot-status {
+            font-size: 12px;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: #21262d;
+        }
+
+        .bot-status.online { background: #1b3a2b; color: #3fb950; }
+        .bot-status.offline { background: #3a1b1b; color: #f85149; }
+
+        .bot-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .bot-actions button {
+            background: #21262d;
+            border: none;
+            color: #c9d1d9;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .bot-actions button:hover {
+            background: #30363d;
+        }
+
+        /* ===== TERMINAL / OUTPUT ===== */
+        .terminal {
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            padding: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            min-height: 120px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .terminal .prompt {
+            color: #58a6ff;
+        }
+
+        .terminal .success {
+            color: #3fb950;
+        }
+
+        .terminal .error {
+            color: #f85149;
+        }
+
+        /* ===== INPUT COMMAND ===== */
+        .cmd-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .cmd-row input {
+            flex: 1;
+            background: #0d1117;
+            border: 1px solid #21262d;
+            border-radius: 8px;
+            padding: 12px 16px;
+            color: #e6edf3;
+            font-size: 14px;
+            min-width: 200px;
+        }
+
+        .cmd-row input:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        .cmd-row button {
+            padding: 12px 24px;
+            background: #238636;
+            border: none;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cmd-row button:hover {
+            background: #2ea043;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 480px) {
+            .header h1 { font-size: 18px; }
+            .card .value { font-size: 22px; }
+            .menu-btn { padding: 8px 14px; font-size: 13px; }
+            .bot-item { flex-direction: column; align-items: stretch; }
+            .bot-actions { justify-content: flex-end; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <h1>🤖 BOT CONTROLLER</h1>
+        <div class="status-badge">
+            <span class="status-dot online" id="statusDot"></span>
+            <span id="statusText">Online</span>
+            <span style="color:#8b949e;margin-left:8px;">|</span>
+            <span id="botCount">0 bot</span>
+        </div>
+    </header>
+
+    <!-- ===== GRID 2 KOLOM ===== -->
+    <div class="grid-2">
+        <div class="card">
+            <h3>📱 BOT TERDAFTAR</h3>
+            <div class="value" id="totalBots">0</div>
+            <div class="sub">Total bot yang terhubung</div>
+        </div>
+        <div class="card">
+            <h3>📊 STATUS BOT UTAMA</h3>
+            <div class="value" id="mainBotStatus">🟢 Aktif</div>
+            <div class="sub" id="mainBotNumber">6285211368739</div>
+        </div>
+    </div>
+
+    <!-- ===== MENU BOT ===== -->
+    <div class="menu-section">
+        <h2>📋 MENU BOT</h2>
+        <div class="menu-grid">
+            <button class="menu-btn primary" onclick="runCommand('jadibot')">➕ Jadibot</button>
+            <button class="menu-btn" onclick="runCommand('jpm')">📨 JPM</button>
+            <button class="menu-btn" onclick="runCommand('kudeta')">⚔️ Kudeta</button>
+            <button class="menu-btn" onclick="runCommand('akses')">🔑 Akses</button>
+            <button class="menu-btn" onclick="runCommand('bot 1 listgrub')">📋 List Grub</button>
+            <button class="menu-btn" onclick="runCommand('spam 628xxx')">💀 Spam OTP</button>
+            <button class="menu-btn danger" onclick="runCommand('off')">⏻ Off</button>
+            <button class="menu-btn" onclick="runCommand('listakses')">📋 List Akses</button>
+        </div>
+    </div>
+
+    <!-- ===== DAFTAR BOT ===== -->
+    <div class="card" style="margin-bottom:20px;">
+        <h3>📱 BOT SENDER AKTIF</h3>
+        <div id="botListContainer">
+            <div class="bot-item online">
+                <div class="bot-info">
+                    <span class="bot-number">6285211368739</span>
+                    <span class="bot-status online">ONLINE</span>
+                </div>
+                <div class="bot-actions">
+                    <button onclick="runCommand('bot 1 listgrub')">List Grup</button>
+                    <button onclick="runCommand('bot 1 chat 628xxx test')">Chat</button>
+                </div>
+            </div>
+            <div class="bot-item offline">
+                <div class="bot-info">
+                    <span class="bot-number">6281234567890</span>
+                    <span class="bot-status offline">OFFLINE</span>
+                </div>
+                <div class="bot-actions">
+                    <button disabled>Offline</button>
+                </div>
+            </div>
+        </div>
+        <div style="margin-top:12px;font-size:13px;color:#8b949e;">
+            💡 Bot yang menjalankan script & terhubung akan muncul di sini
+        </div>
+    </div>
+
+    <!-- ===== COMMAND INPUT + TERMINAL ===== -->
+    <div class="card">
+        <h3>⌨️ KONSOLE PERINTAH</h3>
+        <div class="cmd-row">
+            <input type="text" id="cmdInput" placeholder=".bot 1 listgrub" />
+            <button onclick="sendCustomCommand()">▶ Kirim</button>
+        </div>
+        <div class="terminal" id="terminalOutput">
+            <span class="prompt">[KALL]</span> Dashboard siap. Kirim perintah untuk mengontrol bot.
+        </div>
+    </div>
+
+</div>
+
+<script>
+// ===== KONFIGURASI =====
+// Ganti dengan URL bot lo di Pterodactyl + port
+const BOT_API = 'http://localhost:3000/command'; // contoh: http://123.45.67.89:3000/command
+
+// ===== STATE =====
+let bots = [
+    { number: '6285211368739', status: 'online', isMain: true },
+    { number: '6281234567890', status: 'offline', isMain: false }
+];
+
+// ===== FUNGSI UTAMA =====
+async function runCommand(cmd) {
+    const output = document.getElementById('terminalOutput');
+    output.innerHTML = `<span class="prompt">[KALL]</span> ⏳ Menjalankan: ${cmd} ...`;
+
+    try {
+        const res = await fetch(BOT_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command: cmd })
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+            output.innerHTML = `<span class="prompt">[KALL]</span> <span class="success">✅ Berhasil</span>\n${data.result || 'Perintah berhasil dijalankan.'}`;
+            updateStatus('online');
+        } else {
+            output.innerHTML = `<span class="prompt">[KALL]</span> <span class="error">❌ Gagal</span>\n${data.error || 'Terjadi kesalahan.'}`;
+            updateStatus('offline');
+        }
+    } catch (err) {
+        output.innerHTML = `<span class="prompt">[KALL]</span> <span class="error">❌ Koneksi gagal</span>\n${err.message}\n\nPastikan bot di Pterodactyl berjalan dan API aktif di port 3000.`;
+        updateStatus('offline');
+    }
+}
+
+function sendCustomCommand() {
+    const input = document.getElementById('cmdInput');
+    if (input.value.trim()) {
+        runCommand(input.value.trim());
+        input.value = '';
+    }
+}
+
+// Enter key
+document.getElementById('cmdInput').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') sendCustomCommand();
+});
+
+// ===== UPDATE STATUS =====
+function updateStatus(state) {
+    const dot = document.getElementById('statusDot');
+    const text = document.getElementById('statusText');
+    dot.className = 'status-dot ' + state;
+    text.innerText = state === 'online' ? 'Online' : state === 'offline' ? 'Offline' : 'Loading';
+}
+
+// ===== UPDATE BOT LIST =====
+function renderBotList() {
+    const container = document.getElementById('botListContainer');
+    container.innerHTML = bots.map(bot => `
+        <div class="bot-item ${bot.status}">
+            <div class="bot-info">
+                <span class="bot-number">${bot.number}</span>
+                <span class="bot-status ${bot.status}">${bot.status.toUpperCase()}</span>
+                ${bot.isMain ? '⭐' : ''}
+            </div>
+            <div class="bot-actions">
+                ${bot.status === 'online' ? `
+                    <button onclick="runCommand('bot ${bots.indexOf(bot)+1} listgrub')">List Grup</button>
+                    <button onclick="runCommand('bot ${bots.indexOf(bot)+1} chat 628xxx test')">Chat</button>
+                    <button onclick="runCommand('bot ${bots.indexOf(bot)+1} kudeta link 628xxx')">Kudeta</button>
+                ` : '<span style="color:#8b949e;font-size:12px;">Offline</span>'}
+            </div>
+        </div>
+    `).join('');
+
+    document.getElementById('totalBots').innerText = bots.filter(b => b.status === 'online').length;
+    document.getElementById('botCount').innerText = bots.filter(b => b.status === 'online').length + ' bot online';
+}
+
+// ===== SIMULASI PENERIMAAN BOT BARU =====
+// Ketika ada orang menjalankan script bot dan terhubung, tambahkan ke daftar
+function registerNewBot(number) {
+    // Cek apakah sudah ada
+    if (bots.some(b => b.number === number)) return;
+
+    bots.push({ number, status: 'online', isMain: false });
+    renderBotList();
+
+    const output = document.getElementById('terminalOutput');
+    output.innerHTML = `<span class="prompt">[KALL]</span> <span class="success">✅ Bot baru terhubung!</span>\nNomor: ${number}\nTotal bot: ${bots.filter(b => b.status === 'online').length}`;
+}
+
+// ===== CONTOH REGISTRASI OTOMATIS (SIMULASI) =====
+// Di real implementation, ini akan dipanggil dari API /register
+// registerNewBot('6289876543210');
+
+// ===== RENDER PERTAMA =====
+renderBotList();
+
+// ===== KEEP ALIVE / PING =====
+// Cek koneksi ke bot tiap 30 detik
+setInterval(async () => {
+    try {
+        const res = await fetch(BOT_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ command: 'ping' })
+        });
+        if (res.ok) updateStatus('online');
+        else updateStatus('offline');
+    } catch {
+        updateStatus('offline');
+    }
+}, 30000);
+
+// ===== TAMBAHAN: LISTENER UNTUK REGISTRASI BOT BARU =====
+// Endpoint: /register (dipanggil oleh bot saat pertama kali connect)
+// Nanti di API bot tambahkan endpoint ini
+
+console.log('[KALL] Dashboard siap!');
+</script>
+</body>
+  </html>
