@@ -1,5 +1,3 @@
-import { kv } from '@vercel/kv';
-
 export default async function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
@@ -10,13 +8,11 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Command required' });
     }
 
-    const address = await kv.get('bot:address');
-    if (!address) {
-        return res.status(503).json({ error: 'Bot not registered' });
-    }
+    // ===== PAKAI DOMAIN PTERODACTYL =====
+    const BOT_ADDRESS = 'publicserver1.pteroweb.biz.id:3000';
 
     try {
-        const botRes = await fetch(`http://${address}/command`, {
+        const botRes = await fetch(`http://${BOT_ADDRESS}/command`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ command })
