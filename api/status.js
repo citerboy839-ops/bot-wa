@@ -1,18 +1,16 @@
-import { kv } from '@vercel/kv';
-
 export default async function handler(req, res) {
-    const address = await kv.get('bot:address') || null;
-    const lastSeen = await kv.get('bot:last_seen') || null;
-
-    if (!address) {
-        return res.status(404).json({ error: 'Bot not registered' });
-    }
+    // ===== PAKAI DOMAIN PTERODACTYL =====
+    const BOT_ADDRESS = 'publicserver1.pteroweb.biz.id:3000';
 
     let isOnline = false;
     try {
-        const pingRes = await fetch(`http://${address}/ping`);
+        const pingRes = await fetch(`http://${BOT_ADDRESS}/ping`);
         if (pingRes.ok) isOnline = true;
     } catch (e) {}
 
-    res.json({ address, lastSeen, online: isOnline });
+    res.json({
+        address: BOT_ADDRESS,
+        lastSeen: Date.now(),
+        online: isOnline
+    });
 }
