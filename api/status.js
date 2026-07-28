@@ -12,9 +12,7 @@ export default async function handler(req, res) {
     try {
         const pingRes = await fetch(`http://${address}/ping`);
         if (pingRes.ok) isOnline = true;
-    } catch (e) {
-        isOnline = false;
-    }
+    } catch (e) {}
 
     res.json({ address, lastSeen, online: isOnline });
 }
