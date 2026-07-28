@@ -8,7 +8,7 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'Command required' });
     }
 
-    // ===== PAKAI DOMAIN PTERODACTYL =====
+    // ===== GANTI DENGAN DOMAIN PTERODACTYL LO =====
     const BOT_ADDRESS = 'publicserver1.pteroweb.biz.id:3000';
 
     try {
@@ -18,8 +18,8 @@ export default async function handler(req, res) {
             body: JSON.stringify({ command })
         });
         const data = await botRes.json();
-        res.status(200).json(data);
+        return res.status(200).json(data);
     } catch (err) {
-        res.status(503).json({ error: 'Bot offline or unreachable' });
+        return res.status(503).json({ error: 'Bot offline or unreachable' });
     }
 }
