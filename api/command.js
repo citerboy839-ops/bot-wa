@@ -1,10 +1,6 @@
-export default function handler(req, res) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ error: 'Method not allowed' });
-    }
-    const { command } = req.body || {};
+export default async function handler(req, res) {
     return res.status(200).json({
         success: true,
-        result: `Perintah "${command}" diterima (simulasi)`
+        result: 'Command diterima (test)'
     });
 }
