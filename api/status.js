@@ -1,4 +1,3 @@
-// api/status.js
 import { kv } from '@vercel/kv';
 
 export default async function handler(req, res) {
@@ -9,7 +8,6 @@ export default async function handler(req, res) {
         return res.status(404).json({ error: 'Bot not registered' });
     }
 
-    // Cek apakah bot masih online (ping)
     let isOnline = false;
     try {
         const pingRes = await fetch(`http://${address}/ping`);
@@ -18,9 +16,5 @@ export default async function handler(req, res) {
         isOnline = false;
     }
 
-    res.json({
-        address,
-        lastSeen,
-        online: isOnline
-    });
+    res.json({ address, lastSeen, online: isOnline });
 }
