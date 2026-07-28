@@ -26,7 +26,6 @@
             width: 100%;
         }
 
-        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -66,7 +65,6 @@
         .status-dot.offline { background: #f85149; }
         .status-dot.loading { background: #d29922; }
 
-        /* ===== GRID 2 KOLOM ===== */
         .grid-2 {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -75,9 +73,7 @@
         }
 
         @media (max-width: 768px) {
-            .grid-2 {
-                grid-template-columns: 1fr;
-            }
+            .grid-2 { grid-template-columns: 1fr; }
         }
 
         .card {
@@ -111,7 +107,6 @@
             margin-top: 4px;
         }
 
-        /* ===== BOTTOM MENU ===== */
         .menu-section {
             background: #161b22;
             border: 1px solid #21262d;
@@ -165,7 +160,6 @@
             background: #2ea043;
         }
 
-        /* ===== BOT LIST ===== */
         .bot-list {
             margin-top: 20px;
         }
@@ -232,7 +226,6 @@
             background: #30363d;
         }
 
-        /* ===== TERMINAL / OUTPUT ===== */
         .terminal {
             background: #0d1117;
             border: 1px solid #21262d;
@@ -260,7 +253,6 @@
             color: #f85149;
         }
 
-        /* ===== INPUT COMMAND ===== */
         .cmd-row {
             display: flex;
             gap: 10px;
@@ -299,7 +291,6 @@
             background: #2ea043;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 480px) {
             .header h1 { font-size: 18px; }
             .card .value { font-size: 22px; }
@@ -313,7 +304,6 @@
 
 <div class="container">
 
-    <!-- ===== HEADER ===== -->
     <header class="header">
         <h1>🤖 BOT CONTROLLER</h1>
         <div class="status-badge">
@@ -324,7 +314,6 @@
         </div>
     </header>
 
-    <!-- ===== GRID 2 KOLOM ===== -->
     <div class="grid-2">
         <div class="card">
             <h3>📱 BOT TERDAFTAR</h3>
@@ -338,7 +327,6 @@
         </div>
     </div>
 
-    <!-- ===== MENU BOT ===== -->
     <div class="menu-section">
         <h2>📋 MENU BOT</h2>
         <div class="menu-grid">
@@ -353,7 +341,6 @@
         </div>
     </div>
 
-    <!-- ===== DAFTAR BOT ===== -->
     <div class="card" style="margin-bottom:20px;">
         <h3>📱 BOT SENDER AKTIF</h3>
         <div id="botListContainer">
@@ -382,7 +369,6 @@
         </div>
     </div>
 
-    <!-- ===== COMMAND INPUT + TERMINAL ===== -->
     <div class="card">
         <h3>⌨️ KONSOLE PERINTAH</h3>
         <div class="cmd-row">
@@ -398,8 +384,8 @@
 
 <script>
 // ===== KONFIGURASI =====
-// Ganti dengan URL bot lo di Pterodactyl + port
-const BOT_API = 'http://localhost:3000/command'; // contoh: http://123.45.67.89:3000/command
+// Ganti dengan URL Pterodactyl bot lo (IP + port 3000)
+const BOT_API = 'http://localhost:3000/command';
 
 // ===== STATE =====
 let bots = [
@@ -442,12 +428,10 @@ function sendCustomCommand() {
     }
 }
 
-// Enter key
 document.getElementById('cmdInput').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') sendCustomCommand();
 });
 
-// ===== UPDATE STATUS =====
 function updateStatus(state) {
     const dot = document.getElementById('statusDot');
     const text = document.getElementById('statusText');
@@ -455,7 +439,6 @@ function updateStatus(state) {
     text.innerText = state === 'online' ? 'Online' : state === 'offline' ? 'Offline' : 'Loading';
 }
 
-// ===== UPDATE BOT LIST =====
 function renderBotList() {
     const container = document.getElementById('botListContainer');
     container.innerHTML = bots.map(bot => `
@@ -479,28 +462,8 @@ function renderBotList() {
     document.getElementById('botCount').innerText = bots.filter(b => b.status === 'online').length + ' bot online';
 }
 
-// ===== SIMULASI PENERIMAAN BOT BARU =====
-// Ketika ada orang menjalankan script bot dan terhubung, tambahkan ke daftar
-function registerNewBot(number) {
-    // Cek apakah sudah ada
-    if (bots.some(b => b.number === number)) return;
-
-    bots.push({ number, status: 'online', isMain: false });
-    renderBotList();
-
-    const output = document.getElementById('terminalOutput');
-    output.innerHTML = `<span class="prompt">[KALL]</span> <span class="success">✅ Bot baru terhubung!</span>\nNomor: ${number}\nTotal bot: ${bots.filter(b => b.status === 'online').length}`;
-}
-
-// ===== CONTOH REGISTRASI OTOMATIS (SIMULASI) =====
-// Di real implementation, ini akan dipanggil dari API /register
-// registerNewBot('6289876543210');
-
-// ===== RENDER PERTAMA =====
 renderBotList();
 
-// ===== KEEP ALIVE / PING =====
-// Cek koneksi ke bot tiap 30 detik
 setInterval(async () => {
     try {
         const res = await fetch(BOT_API, {
@@ -515,11 +478,7 @@ setInterval(async () => {
     }
 }, 30000);
 
-// ===== TAMBAHAN: LISTENER UNTUK REGISTRASI BOT BARU =====
-// Endpoint: /register (dipanggil oleh bot saat pertama kali connect)
-// Nanti di API bot tambahkan endpoint ini
-
 console.log('[KALL] Dashboard siap!');
 </script>
 </body>
-  </html>
+</html>
