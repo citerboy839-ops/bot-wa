@@ -1,25 +1,10 @@
-export default async function handler(req, res) {
+export default function handler(req, res) {
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method not allowed' });
     }
-
-    const { command } = req.body;
-    if (!command) {
-        return res.status(400).json({ error: 'Command required' });
-    }
-
-    // ===== GANTI DENGAN DOMAIN PTERODACTYL LO =====
-    const BOT_ADDRESS = 'publicserver1.pteroweb.biz.id:3000';
-
-    try {
-        const botRes = await fetch(`http://${BOT_ADDRESS}/command`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ command })
-        });
-        const data = await botRes.json();
-        return res.status(200).json(data);
-    } catch (err) {
-        return res.status(503).json({ error: 'Bot offline or unreachable' });
-    }
+    const { command } = req.body || {};
+    return res.status(200).json({
+        success: true,
+        result: `Perintah "${command}" diterima (simulasi)`
+    });
 }
