@@ -3,57 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Bot Master</title>
+    <title>Dashboard Bot WA & Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-950 text-gray-200 font-sans p-6">
+<body class="bg-gray-950 text-gray-100 font-sans p-4 md:p-6">
 
-    <h1 class="text-3xl font-black text-blue-500 mb-6 border-b border-gray-800 pb-4">PANEL CONTROL BOT</h1>
+    <div class="max-w-6xl mx-auto">
+        <h1 class="text-2xl md:text-3xl font-black text-blue-500 mb-6 border-b border-gray-800 pb-4">
+            PANEL CONTROL BOT & STORE
+        </h1>
 
-    <!-- Grid 3 Kolom -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <!-- KOLOM 1: Data Global Bot -->
-        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-lg">
-            <h2 class="font-bold text-lg text-blue-400 mb-4">🤖 Data Global Bot</h2>
-            <div class="mb-4">
-                <p class="text-xs text-gray-400">Total Bot Aktif</p>
-                <p class="text-3xl font-black text-green-400" id="bot-aktif">0</p>
+        <!-- DASHBOARD GRID 3 KOLOM -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- KOLOM 1: Data Global Bot -->
+            <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl">
+                <h2 class="font-bold text-blue-400 mb-3">🤖 Data Global Bot</h2>
+                <div class="mb-3">
+                    <p class="text-xs text-gray-400">Total Bot Aktif</p>
+                    <p class="text-3xl font-black text-green-400" id="bot-aktif">0</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400">Total Bot Terdaftar</p>
+                    <p class="text-lg font-bold text-gray-300" id="bot-total">0</p>
+                </div>
             </div>
-            <div>
-                <p class="text-xs text-gray-400">Total Bot Terdaftar</p>
-                <p class="text-xl font-bold text-gray-300" id="bot-total">0</p>
+
+            <!-- KOLOM 2: Data Pengunjung -->
+            <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl">
+                <h2 class="font-bold text-purple-400 mb-3">👥 Data Pengunjung</h2>
+                <div class="mb-3">
+                    <p class="text-xs text-gray-400">Total Pengunjung Website</p>
+                    <p class="text-3xl font-black text-purple-400" id="visitor-total">0</p>
+                </div>
+                <div>
+                    <p class="text-xs text-gray-400">Pengunjung Online Saat Ini</p>
+                    <p class="text-lg font-bold text-gray-300" id="visitor-online">0</p>
+                </div>
+            </div>
+
+            <!-- KOLOM 3: Pilih Bot -->
+            <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl">
+                <h2 class="font-bold text-orange-400 mb-3">📱 Pilih Bot</h2>
+                <div id="list-bot" class="h-36 overflow-y-auto">
+                    <p class="text-xs text-gray-500">Memuat data bot...</p>
+                </div>
             </div>
         </div>
 
-        <!-- KOLOM 2: Data Global User -->
-        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-lg">
-            <h2 class="font-bold text-lg text-purple-400 mb-4">👥 Data Pengunjung</h2>
-            <div class="mb-4">
-                <p class="text-xs text-gray-400">Total Pengunjung Website</p>
-                <p class="text-3xl font-black text-purple-400" id="visitor-total">0</p>
-            </div>
-            <div>
-                <p class="text-xs text-gray-400">Pengunjung Online Saat Ini</p>
-                <p class="text-xl font-bold text-gray-300" id="visitor-online">0</p>
-            </div>
-        </div>
-
-        <!-- KOLOM 3: Pilih Bot & Tampilkan Command -->
-        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-lg flex flex-col h-[400px]">
-            <h2 class="font-bold text-lg text-orange-400 mb-4">📱 Pilih Bot & Command</h2>
+        <!-- EKSEKUSI PERINTAH & AKUN USER -->
+        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl mb-8">
+            <h2 class="font-bold text-yellow-400 mb-4">⚙️ Eksekusi Perintah Bot Direct</h2>
             
-            <!-- List Bot -->
-            <div class="overflow-y-auto mb-4 border-b border-gray-800 pb-4 h-1/2" id="list-bot">
-                <p class="text-sm text-gray-500">Memuat data bot...</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="text-xs text-gray-400">Nomor WhatsApp Anda (Nomor User/Pengunjung):</label>
+                    <input type="number" id="user-wa-number" placeholder="Contoh: 628123456789" class="w-full bg-gray-950 border border-gray-800 rounded p-2 text-sm mt-1 focus:border-blue-500 outline-none">
+                </div>
+                <div class="flex items-end gap-2">
+                    <button id="btn-cek-saldo" class="bg-gray-800 hover:bg-gray-700 text-gray-200 text-xs px-4 py-2.5 rounded font-bold border border-gray-700 w-full">
+                        💳 CEK SALDO USER
+                    </button>
+                </div>
             </div>
 
-            <!-- Command Container -->
-            <div id="command-container" class="h-1/2 overflow-y-auto pt-2">
-                <p class="text-sm text-gray-500 text-center mt-8">Pilih bot di atas untuk melihat command.</p>
+            <div class="mb-3">
+                <label class="text-xs text-gray-400 mb-1 block">Pilih Command Bot:</label>
+                <div id="command-buttons" class="flex flex-wrap gap-2 mb-3"></div>
+            </div>
+
+            <div class="flex gap-2">
+                <input type="text" id="input-cmd" placeholder="Atau ketik command di sini (Contoh: .jadibot)" class="flex-1 bg-gray-950 border border-gray-800 rounded p-2 text-sm focus:border-blue-500 outline-none">
+                <button id="btn-run-cmd" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-5 text-xs rounded transition">
+                    KIRIM PERINTAH
+                </button>
+            </div>
+
+            <!-- TERMINAL OUTPUT -->
+            <div class="mt-4 bg-black border border-gray-800 rounded p-3 text-xs font-mono text-green-400 min-h-[60px]" id="terminal-output">
+                System Ready... Hasil respon dari WhatsApp Bot akan muncul di sini.
             </div>
         </div>
 
+        <!-- SEKSI TOKO DIGITAL & DEPOSIT SALDO -->
+        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl">
+            <div class="flex flex-col md:flex-row md:items-center justify-between border-b border-gray-800 pb-4 mb-6 gap-4">
+                <div>
+                    <h2 class="font-black text-xl text-green-400">🛍️ TOKO PRODUK BOT AUTOMATED</h2>
+                    <p class="text-xs text-gray-400">Beli script/produk digital dan deposit otomatis via QRIS 24/7</p>
+                </div>
+
+                <!-- FORM DEPOSIT -->
+                <div class="flex items-center gap-2">
+                    <input type="number" id="deposit-amount" placeholder="Nominal Deposit (Rp)" class="bg-gray-950 border border-gray-800 rounded p-2 text-xs w-40 outline-none focus:border-green-500">
+                    <button id="btn-deposit" class="bg-green-600 hover:bg-green-500 font-bold text-xs text-white px-4 py-2 rounded transition">
+                        ⚡ DEPOSIT QRIS
+                    </button>
+                </div>
+            </div>
+
+            <!-- KATALOG PRODUK -->
+            <div id="product-catalog" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <p class="text-xs text-gray-500 text-center col-span-3">Memuat katalog produk...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP QRIS -->
+    <div id="qr-modal" class="fixed inset-0 bg-black/80 flex items-center justify-center p-4 hidden z-50">
+        <div class="bg-gray-900 border border-gray-800 p-6 rounded-2xl max-w-sm w-full text-center">
+            <h3 class="font-bold text-lg text-white mb-4">Pembayaran QRIS</h3>
+            <img id="qris-image" src="" alt="QRIS" class="mx-auto rounded-lg mb-4 border border-gray-700 w-60 h-60 object-contain bg-white">
+            <div id="qris-info" class="text-xs text-gray-400"></div>
+            <button onclick="document.getElementById('qr-modal').classList.add('hidden')" class="mt-4 text-xs text-red-400 underline">Tutup</button>
+        </div>
     </div>
 
     <script type="module" src="./concentration/install.js"></script>
