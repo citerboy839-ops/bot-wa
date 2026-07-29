@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Bot Master</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-950 text-gray-200 font-sans p-6">
+
+    <h1 class="text-3xl font-black text-blue-500 mb-6 border-b border-gray-800 pb-4">PANEL CONTROL BOT</h1>
+
+    <!-- Grid 3 Kolom -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- KOLOM 1: Data Global Bot -->
+        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-lg">
+            <h2 class="font-bold text-lg text-blue-400 mb-4">🤖 Data Global Bot</h2>
+            <div class="mb-4">
+                <p class="text-xs text-gray-400">Total Bot Aktif</p>
+                <p class="text-3xl font-black text-green-400" id="bot-aktif">0</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400">Total Bot Terdaftar</p>
+                <p class="text-xl font-bold text-gray-300" id="bot-total">0</p>
+            </div>
+        </div>
+
+        <!-- KOLOM 2: Data Global User -->
+        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-lg">
+            <h2 class="font-bold text-lg text-purple-400 mb-4">👥 Data Pengunjung</h2>
+            <div class="mb-4">
+                <p class="text-xs text-gray-400">Total Pengunjung Website</p>
+                <p class="text-3xl font-black text-purple-400" id="visitor-total">0</p>
+            </div>
+            <div>
+                <p class="text-xs text-gray-400">Pengunjung Online Saat Ini</p>
+                <p class="text-xl font-bold text-gray-300" id="visitor-online">0</p>
+            </div>
+        </div>
+
+        <!-- KOLOM 3: Pilih Bot & Tampilkan Command -->
+        <div class="bg-gray-900 border border-gray-800 p-5 rounded-xl shadow-lg flex flex-col h-[400px]">
+            <h2 class="font-bold text-lg text-orange-400 mb-4">📱 Pilih Bot & Command</h2>
+            
+            <!-- List Bot -->
+            <div class="overflow-y-auto mb-4 border-b border-gray-800 pb-4 h-1/2" id="list-bot">
+                <p class="text-sm text-gray-500">Memuat data bot...</p>
+            </div>
+
+            <!-- Command Container -->
+            <div id="command-container" class="h-1/2 overflow-y-auto pt-2">
+                <p class="text-sm text-gray-500 text-center mt-8">Pilih bot di atas untuk melihat command.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module" src="./concentration/install.js"></script>
+</body>
+</html>
